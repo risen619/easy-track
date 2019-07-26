@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
         "target": "es2017",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "module": "commonjs",
         "outDir": "./build",
         "sourceMap": true,
-        "rootDir": "./",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "rootDir": "."
     },
     "include": [
-        "./**/*.ts"
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

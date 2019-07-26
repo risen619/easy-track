@@ -1,15 +1,18 @@
 import "reflect-metadata";
 
-import { createExpressServer, useContainer } from 'routing-controllers';
+import { Application } from "express";
+import { createExpressServer, useContainer, Action } from 'routing-controllers';
 import { Container } from 'typedi';
 
 import { DB } from './db';
 
 import { UserController } from "../controllers/UserContoller";
+import { AuthMiddleware } from "./auth";
 
 useContainer(Container);
 
-const app = createExpressServer({
+const app: Application = createExpressServer({
+    currentUserChecker: (action: Action) => action.request.auth,
     routePrefix: '/api',
     controllers: [UserController],
 });

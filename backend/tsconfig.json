@@ -1,25 +1,24 @@
 {
-  "compilerOptions": {
-      "target": "es2017",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "module": "commonjs",
-      "outDir": "./build",
-      "sourceMap": true,
-      "baseUrl": ".",
-      "rootDirs": [
-          "./src",
-          "../common/src"
+    "compilerOptions": {
+        "target": "es2017",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "outDir": "./build",
+        "sourceMap": true,
+        "baseUrl": "./",
+        "rootDirs": [
+            "./src/",
+            "../../common/src/"
+        ],
+        "paths": {
+            "@common/*": ["../common/src/*"]
+        }
+    },
+    "include": [
+        "src/**/*.ts"
     ],
-      "paths": {
-          "@common/*" : ["../common/src/*"]
-      }
-  },
-  "include": [
-      "src/**/*.ts"
-  ],
-
-  "exclude": [
-      "node_modules"
-  ]
+    "exclude": [
+        "node_modules"
+    ]
 }

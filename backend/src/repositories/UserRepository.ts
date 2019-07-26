@@ -9,4 +9,15 @@ export class UserRepository
     {
         return await UserModel.find();
     }
+
+    async getById(id: string)
+    {
+        return await UserModel.findById(id);
+    }
+
+    async getByEmail(email: string)
+    {
+        return await UserModel.findOne({ email });
+    }
+
 }

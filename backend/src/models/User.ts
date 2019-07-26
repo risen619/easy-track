@@ -1,6 +1,6 @@
 import { Typegoose, prop } from 'typegoose';
 
-import { IUser, IName } from '@common/models/IUser';
+import { IName, IUser } from '@common/models/IUser';
 
 export class User extends Typegoose implements IUser
 {
