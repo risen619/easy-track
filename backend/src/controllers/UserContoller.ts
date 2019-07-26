@@ -1,5 +1,5 @@
 import { JsonController, Get, Req, Res } from 'routing-controllers';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import { UserRepository } from '../repositories';
 
@@ -12,5 +12,11 @@ export class UserController
     index(@Res() res: Response)
     {
         return res.send(this.userRepository.getAll());
+    }
+
+    @Get('/users/create')
+    create(@Res() res: Response)
+    {
+        
     }
 }
