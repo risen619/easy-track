@@ -1,5 +1,6 @@
-import { NextFunction } from "express";
+import { NextFunction, Response, Request } from "express";
 import { Inject, Service } from "typedi";
+import { Req, Res } from "routing-controllers";
 
 import * as jwt from 'jsonwebtoken';
 
@@ -28,20 +29,24 @@ export class Authentication
 @Service()
 export class AuthService
 {
-    authHandler(req: Request, res: Response, next: NextFunction)
+    authHandler(@Req() req: Request, @Res() res: Response, next: NextFunction)
     {
-        if(!req.headers['Authorization'] || !(<string>req.headers['Authorization']).startsWith('Bearer ')) next('No token provided');
+        if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer '))
+        {
+            res.status(401).send({ error: 'No token provided' });
+        }
         else
         {
-            const token = (<string>req.headers['Authorization']).split('Bearer ')[1];
+            const token = req.headers.authorization.split('Bearer ')[1];
             jwt.verify(token, process.env.JWT_SECRET, (err, decoded) =>
             {
                 if(err) next(err);
                 else if(decoded && decoded['userId'])
                 {
                     req['auth'] = new Authentication(decoded['userId']);
+                    next();
                 }
-                else next('Invalid token provided');
+                else res.status(400).send({ error: 'Invalid token provided' });
             });
         }
     }

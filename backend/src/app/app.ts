@@ -6,15 +6,18 @@ import { Container } from 'typedi';
 
 import { DB } from './db';
 
-import { UserController } from "../controllers/UserContoller";
-import { AuthMiddleware } from "./auth";
+import { ErrorMiddleware } from "src/middlewares/error";
+import { UserController, AuthController } from "src/controllers";
 
 useContainer(Container);
 
 const app: Application = createExpressServer({
     currentUserChecker: (action: Action) => action.request.auth,
     routePrefix: '/api',
-    controllers: [UserController],
+    controllers: [
+        AuthController,
+        UserController
+    ]
 });
 
 const db = new DB();
