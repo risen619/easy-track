@@ -6,18 +6,29 @@ import { Container } from 'typedi';
 
 import { DB } from './db';
 
-import { ErrorMiddleware } from "src/middlewares/error";
-import { UserController, AuthController } from "src/controllers";
+import { UserController, AuthController, WorkspaceController } from "src/controllers";
+import { AuthMiddleware } from "src/middlewares/auth";
+import { Authentication } from "src/services/AuthService";
 
 useContainer(Container);
 
 const app: Application = createExpressServer({
-    currentUserChecker: (action: Action) => action.request.auth,
+    authorizationChecker: (action) =>
+    {
+        const auth = action.request.auth as Authentication;
+
+        if(!auth) return false;
+
+        return true;
+    },
+    currentUserChecker: async (action: Action) => await (action.request.auth as Authentication).user,
     routePrefix: '/api',
     controllers: [
         AuthController,
-        UserController
-    ]
+        UserController,
+        WorkspaceController
+    ],
+    middlewares: [AuthMiddleware]
 });
 
 const db = new DB();

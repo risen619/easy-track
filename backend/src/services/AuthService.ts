@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import { Inject, Service } from "typedi";
+import Container, { Inject, Service } from "typedi";
 import { Req, Res } from "routing-controllers";
 
 import * as jwt from 'jsonwebtoken';
@@ -8,10 +8,10 @@ import { UserRepository } from "src/repositories";
 
 import { User } from "src/models/User";
 
+
 export class Authentication
 {
-    @Inject()
-    private userRepository: UserRepository;
+    private userRepository: UserRepository = Container.get(UserRepository)
     private _user: User;
 
     constructor(private userId: string) { }
@@ -33,7 +33,7 @@ export class AuthService
     {
         if(!req.headers.authorization || !req.headers.authorization.startsWith('Bearer '))
         {
-            res.status(401).send({ error: 'No token provided' });
+            next();
         }
         else
         {

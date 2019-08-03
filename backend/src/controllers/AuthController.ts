@@ -1,34 +1,41 @@
-import { JsonController, Post, Body, Res } from "routing-controllers";
+import { JsonController, Post, Body, Res, BodyParam, OnUndefined } from "routing-controllers";
 import { Response } from "express";
 import { Inject } from "typedi";
 
 import { ISignUp } from '@common/models/ISignUp'
 import { ISignIn } from '@common/models/ISignIn'
 
-import { UserRepository } from "src/repositories";
+import { AuthRepository } from "src/repositories";
 
 @JsonController()
 export class AuthController
 {
-    @Inject()
-    private userRepository: UserRepository;
+    @Inject() private authRepository: AuthRepository;
 
+    @OnUndefined(204)
     @Post('/sign-up')
-    signUp(@Body() body: ISignUp, @Res() res: Response)
+    signUp(
+        @Body({ required: true, validate: true }) body: ISignUp,
+        @Res() res: Response
+    )
     {
-        return this.userRepository.register(body)
-        .then(user => res.status(200).send(user), e => res.status(500).send(e));
+        this.authRepository.register(body)
+        .then(user =>
+        {
+            if(user)
+                res.status(200);
+        }, ({ code, ...e }) => res.status(code || 500).send(e));
     }
 
     @Post('/sign-in')
     signIn(@Body() body: ISignIn, @Res() res: Response)
     {
-        return this.userRepository.login(body)
+        return this.authRepository.login(body)
         .then(({ user, token }) =>
         {
             res.setHeader('Authorization', `Bearer ${token}`);
-            res.status(200).send(user);
-        }, e => res.status(404).send(e));
+            return res.status(200).send(user);
+        }, ({ code, ...e }) => res.status(code || 500).send(e));
     }
 
 }

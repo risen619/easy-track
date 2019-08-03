@@ -1,5 +1,9 @@
 import { UserRepository } from './UserRepository';
+import { AuthRepository } from './AuthRepository';
+import { WorkspaceRepository } from './WorkspaceRepository';
 
 export {
-    UserRepository
+    UserRepository,
+    AuthRepository,
+    WorkspaceRepository
 };

@@ -1,11 +1,6 @@
 import { Service } from "typedi";
 
-import * as jwt from 'jsonwebtoken';
-
-import { ISignUp } from "@common/models/ISignUp";
-import { ISignIn } from "@common/models/ISignIn";
-
-import { UserModel } from "./../models/User";
+import { UserModel, User } from "./../models/User";
 
 @Service()
 export class UserRepository
@@ -25,26 +20,18 @@ export class UserRepository
         return await UserModel.findOne({ email });
     }
 
-    async register(user: ISignUp)
+    async updateById(id: string, body: User)
     {
-        if(await this.getByEmail(user.email))
-            return Promise.reject('User with such email already exists');
+        let user = await this.getById(id);
+
+        if(!user)
+            return Promise.reject({ code: 404, error: 'User with such ID is not registered' });
         else
         {
-            return UserModel.create(user);
-        }
-    }
-
-    async login(data: ISignIn)
-    {
-        const user = await this.getByEmail(data.email);
-
-        if(!user) return Promise.reject('User with such email is not registered');
-        else
-        {
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-            user.sessions.push(token);
-            return user.save().then(user => ({ user: user, token }));
+            for(let k in body)
+                user[k] = body[k];
+                
+            return await user.save();
         }
     }
 

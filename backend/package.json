@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node-dev -r ./src/app/dotenv.js -r tsconfig-paths/register --respawn --transpileOnly ./src/app/app.ts",
+    "migrate": "ts-node-dev -r ./src/app/dotenv.js --transpileOnly",
     "build-prod": "tsc && node -r ./src/app/dotenv.js ./build/app.js",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
