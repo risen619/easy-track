@@ -13,6 +13,7 @@ import { Authentication } from "src/services/AuthService";
 useContainer(Container);
 
 const app: Application = createExpressServer({
+    cors: true,
     authorizationChecker: (action) =>
     {
         const auth = action.request.auth as Authentication;
